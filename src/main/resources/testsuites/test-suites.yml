@@ -1,0 +1,14 @@
+test-suites:
+  - id: vehicleposition_mqtt
+    name: Test HFP -> GTFS-RT VP MQTT pipeline
+    dependencies:
+      - mosquitto
+      - pulsar
+      - hfp_mqtt_pulsar_gateway
+      - hfp_parser
+      - vehicleposition_processor
+      - vehicleposition_pulsar_mqtt_gateway
+    steps:
+      - start-mqtt-listener
+      - check-mqtt-messages
+      - stop-mqtt-listener

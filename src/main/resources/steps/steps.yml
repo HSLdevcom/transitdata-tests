@@ -1,0 +1,17 @@
+steps:
+  - id: start-mqtt-listener
+    class: fi.hsl.transitdata.steps.StartMqttListener
+    timeout: 15 #Seconds
+    dependencies:
+      - mosquitto
+  - id: check-mqtt-messages
+    class: fi.hsl.transitdata.steps.CheckMqttMessages
+    dependencies:
+      - hfp_mqtt_pulsar_gateway
+      - vehicleposition_pulsar_mqtt_gateway
+      - vehicleposition_processor
+      - hfp_parser
+    timeout: 15
+  - id: stop-mqtt-listener
+    class: fi.hsl.transitdata.steps.StopMqttListener
+    timeout: 10 #Seconds
