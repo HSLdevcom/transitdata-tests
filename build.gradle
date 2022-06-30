@@ -1,5 +1,7 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'org.jetbrains.kotlin.jvm' version '1.6.21'
+    id 'application'
 }
 
 group = 'fi.hsl'
@@ -37,4 +39,14 @@ compileKotlin {
 
 compileTestKotlin {
     kotlinOptions.jvmTarget = '1.8'
+}
+
+shadowJar {
+    archiveBaseName.set('transitdata-tests')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+}
+
+application {
+    mainClassName = 'fi.hsl.transitdata.MainKt'
 }
