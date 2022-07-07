@@ -15,3 +15,16 @@ steps:
   - id: stop-mqtt-listener
     class: fi.hsl.transitdata.steps.StopMqttListener
     timeout: 10 #Seconds
+  - id: send-eke-mqtt
+    class: fi.hsl.transitdata.steps.SendEkeMqtt
+    timeout: 20
+    dependencies:
+      - mosquitto
+      - eke_mqtt_pulsar_gateway
+      - eke_sink
+  - id: check-eke-file
+    class: fi.hsl.transitdata.steps.CheckEkeFile
+    timeout: 30
+    dependencies:
+      - eke_mqtt_pulsar_gateway
+      - eke_sink

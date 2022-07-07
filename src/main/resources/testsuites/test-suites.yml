@@ -12,3 +12,13 @@ test-suites:
       - start-mqtt-listener
       - check-mqtt-messages
       - stop-mqtt-listener
+  - id: eke_sink
+    name: Test EKE sink
+    dependencies:
+      - mosquitto
+      - pulsar
+      - eke_mqtt_pulsar_gateway
+      - eke_sink
+    steps:
+      - send-eke-mqtt
+      - check-eke-file
