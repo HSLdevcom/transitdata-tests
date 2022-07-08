@@ -23,3 +23,13 @@ jobs:
           files: build/libs/transitdata-tests.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get Git tag name
+        id: git_tag
+        run: echo ::set-output name=GIT_TAG::${GITHUB_REF/refs\/tags\//}
+      - name: Build and publish release Docker image
+        uses: elgohr/Publish-Docker-Github-Action@v4
+        with:
+          name: hsldevcom/transitdata-tests
+          username: ${{ secrets.TRANSITDATA_DOCKERHUB_USER  }}
+          password: ${{ secrets.TRANSITDATA_DOCKERHUB_TOKEN }}
+          tags: "latest,${{ steps.git_tag.outputs.GIT_TAG }}"
