@@ -1,0 +1,18 @@
+name: Run tests daily
+on:
+  schedule:
+    - '25 4 * * 2-6'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+          cache: 'gradle'
+      - name: Run tests
+        run: ./gradlew run --no-daemon
