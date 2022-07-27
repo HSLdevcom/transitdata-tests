@@ -8,6 +8,7 @@ import xyz.malkki.microservicetest.testexecution.TestStepCode
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.zip.GZIPInputStream
 import kotlin.streams.toList
 
 class CheckEkeFile : TestStepCode {
@@ -23,7 +24,7 @@ class CheckEkeFile : TestStepCode {
         assertTrue(Files.list(dir).toList().isNotEmpty())
 
         val csvFile = Files.list(dir).findAny().get()
-        val fileLines = Files.lines(csvFile, StandardCharsets.UTF_8).toList()
+        val fileLines = GZIPInputStream(Files.newInputStream(csvFile)).bufferedReader(StandardCharsets.UTF_8).use { it.readLines() }
 
         assertEquals(2, fileLines.size)
     }
