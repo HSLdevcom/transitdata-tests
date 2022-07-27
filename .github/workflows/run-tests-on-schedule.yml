@@ -1,7 +1,7 @@
 name: Run tests daily
 on:
   schedule:
-    - '25 4 * * 2-6'
+    - cron: '25 4 * * 2-6'
 
 jobs:
   test:
