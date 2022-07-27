@@ -1,0 +1,18 @@
+services:
+  - id: mosquitto
+    container: eclipse-mosquitto:1.6.3
+    ports:
+      - 1883
+    waitStrategy:
+      type: LOG
+      logMessage: ".*Opening ipv4 listen socket on port 1883.*"
+  - id: pulsar
+    container: apachepulsar/pulsar:2.6.2
+    cmd: bin/pulsar standalone
+    ports:
+      - 6650
+      - 8080
+    startupTimeout: 90
+    waitStrategy:
+      type: LOG #PORT, LOG or HEALTHCHECK
+      logMessage: ".*messaging service is ready.*"
