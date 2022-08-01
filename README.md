@@ -1,4 +1,4 @@
-# transitdata-tests
+# transitdata-tests [![Run tests daily](https://github.com/HSLdevcom/transitdata-tests/actions/workflows/run-tests-on-schedule.yml/badge.svg)](https://github.com/HSLdevcom/transitdata-tests/actions/workflows/run-tests-on-schedule.yml)
 
 Repository containing E2E tests for [Transitdata](https://github.com/HSLdevcom/transitdata) implemented using [microservice-testing-tool](https://github.com/mjaakko/microservice-testing-tool).
 
