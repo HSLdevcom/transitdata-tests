@@ -17,6 +17,8 @@ jobs:
           cache: 'gradle'
       - name: Build fat .jar with Gradle
         run: ./gradlew shadowJar --no-daemon
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload .jar package to GitHub release
         uses: softprops/action-gh-release@v1
         with:

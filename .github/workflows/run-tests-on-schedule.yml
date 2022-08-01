@@ -16,3 +16,5 @@ jobs:
           cache: 'gradle'
       - name: Run tests
         run: ./gradlew run --no-daemon
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
