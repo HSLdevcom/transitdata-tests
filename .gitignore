@@ -175,5 +175,8 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/java,kotlin,intellij,gradle
 
-#MQTT client
+# MQTT client
 mqtt-async-client*
+
+# Test data directory
+testdata/
