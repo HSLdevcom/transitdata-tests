@@ -23,10 +23,10 @@ services:
       - pulsar
     volumes:
       - type: FILESYSTEM
-        hostPath: /home/jaakko_tyo/IdeaProjects/transitdata-tests/testdata/eke
+        hostPath: testdata/eke
         containerPath: /eke-upload
       - type: FILESYSTEM
-        hostPath: /home/jaakko_tyo/IdeaProjects/transitdata-tests/testdata/eke-sink
+        hostPath: testdata/eke-sink
         containerPath: /eke
     waitStrategy:
       type: LOG
