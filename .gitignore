@@ -180,3 +180,6 @@ mqtt-async-client*
 
 # Test data directory
 testdata/
+
+# attach_pid
+.attach_pid*
