@@ -16,3 +16,19 @@ services:
     waitStrategy:
       type: LOG #PORT, LOG or HEALTHCHECK
       logMessage: ".*messaging service is ready.*"
+  - id: redis
+    container: redis
+    ports:
+      - 6379
+    waitStrategy:
+      type: LOG
+      logMessage: ".*Ready to accept connections.*"
+  - id: postgres
+    container: postgres:14-alpine
+    ports:
+      - 5432
+    waitStrategy:
+      type: LOG
+      logMessage: ".*database system is ready to accept connections.*"
+    environment:
+      POSTGRES_PASSWORD: password

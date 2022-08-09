@@ -2,15 +2,8 @@ steps:
   - id: start-mqtt-listener
     class: fi.hsl.transitdata.steps.StartMqttListener
     timeout: 15 #Seconds
-    dependencies:
-      - mosquitto
   - id: check-mqtt-messages
     class: fi.hsl.transitdata.steps.CheckMqttMessages
-    dependencies:
-      - hfp_mqtt_pulsar_gateway
-      - vehicleposition_pulsar_mqtt_gateway
-      - vehicleposition_processor
-      - hfp_parser
     timeout: 15
   - id: stop-mqtt-listener
     class: fi.hsl.transitdata.steps.StopMqttListener
@@ -18,13 +11,26 @@ steps:
   - id: send-eke-mqtt
     class: fi.hsl.transitdata.steps.SendEkeMqtt
     timeout: 20
-    dependencies:
-      - mosquitto
-      - eke_mqtt_pulsar_gateway
-      - eke_sink
   - id: check-eke-file
     class: fi.hsl.transitdata.steps.CheckEkeFile
     timeout: 30
+  - id: add-doi-data-to-redis
+    class: fi.hsl.transitdata.steps.AddDoiDataToRedis
+    timeout: 20
+  - id: add-roi-data-to-db
+    class: fi.hsl.transitdata.steps.AddRoiDataToDb
+    timeout: 35
+  - id: start-tu-mqtt-listener
+    class: fi.hsl.transitdata.steps.StartMqttListener
+    timeout: 15 #Seconds
     dependencies:
-      - eke_mqtt_pulsar_gateway
-      - eke_sink
+      - mosquitto
+  - id: check-tu-mqtt-messages
+    class: fi.hsl.transitdata.steps.CheckMqttMessages
+    timeout: 15
+  - id: stop-tu-mqtt-listener
+    class: fi.hsl.transitdata.steps.StopMqttListener
+    timeout: 10 #Seconds
+  - id: check-pulsar-stats
+    class: fi.hsl.transitdata.steps.CheckPulsarStats
+    timeout: 30

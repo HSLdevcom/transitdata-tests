@@ -1,0 +1,87 @@
+services:
+  - id: pubtrans_arrival_source
+    container: hsldevcom/transitdata-pubtrans-source:develop
+    dependencies:
+      - postgres
+      - pulsar
+      - redis
+    environment:
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      REDIS_HOST: redis
+      FILEPATH_CONNECTION_STRING: /connection_string.txt
+      PULSAR_PRODUCER_TOPIC: arrival
+      PT_TABLE: ptroiarrival
+      DB_TABLE: Arrival
+      CACHE_MAX_AGE_IN_MINS: 2400
+    volumes:
+      - type: RESOURCE
+        hostPath: test_db_conn_string.txt
+        containerPath: /connection_string.txt
+  - id: pubtrans_departure_source
+    container: hsldevcom/transitdata-pubtrans-source:develop
+    dependencies:
+      - postgres
+      - pulsar
+      - redis
+    environment:
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      REDIS_HOST: redis
+      FILEPATH_CONNECTION_STRING: /connection_string.txt
+      PULSAR_PRODUCER_TOPIC: departure
+      PT_TABLE: ptroideparture
+      DB_TABLE: Departure
+      CACHE_MAX_AGE_IN_MINS: 2400
+    volumes:
+      - type: RESOURCE
+        hostPath: test_db_conn_string.txt
+        containerPath: /connection_string.txt
+  - id: stop_estimates
+    container: hsldevcom/transitdata-stop-estimates:1
+    dependencies:
+      - pulsar
+      - pubtrans_arrival_source
+      - pubtrans_departure_source
+    waitStrategy:
+      type: LOG
+      logMessage: ".*Start handling the messages.*"
+    environment:
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      PULSAR_CONSUMER_MULTIPLE_TOPICS_PATTERN: persistent://public/default/(arrival|departure)
+      PULSAR_PRODUCER_TOPIC: stop-estimate
+      SOURCE: ptroi
+  - id: tripupdate_processor
+    container: hsldevcom/transitdata-tripupdate-processor:1
+    dependencies:
+      - pulsar
+      - stop_estimates
+    waitStrategy:
+      type: LOG
+      logMessage: ".*Start handling the messages.*"
+    environment:
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      PULSAR_CONSUMER_MULTIPLE_TOPICS_PATTERN: persistent://public/default/stop-estimate
+      PULSAR_PRODUCER_TOPIC: gtfsrt_tripupdate
+      TRIPUPDATE_MIN_TIME_BEFORE_DEPARTURE_IN_SECS: "1 minute"
+  - id: tripupdate_pulsar_mqtt_gateway
+    container: hsldevcom/pulsar-mqtt-gateway:develop
+    dependencies:
+      - mosquitto
+      - pulsar
+    waitStrategy:
+      type: LOG
+      logMessage: ".*Starting to process messages.*"
+    environment:
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      MQTT_BROKER_HOST: "tcp://mosquitto:1883"
+      MQTT_TOPIC: gtfsrt/dev/fi/hsl/tu
+      PULSAR_CONSUMER_TOPIC: gtfsrt_tripupdate
+      MQTT_RETAIN_MESSAGE: false
+      MQTT_HAS_AUTHENTICATION: false
+      MQTT_CLIENT_ID: vehicleposition
+
+
