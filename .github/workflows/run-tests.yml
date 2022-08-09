@@ -1,7 +1,10 @@
-name: Run tests daily
+name: Run tests
 on:
   schedule:
     - cron: '25 4 * * 2-6'
+  push:
+    branches:    
+      - master
 
 jobs:
   test:
