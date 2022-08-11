@@ -1,4 +1,4 @@
-package fi.hsl.transitdata.steps
+package fi.hsl.transitdata.steps.eke
 
 import org.eclipse.paho.client.mqttv3.*
 import org.testcontainers.containers.GenericContainer

@@ -1,4 +1,4 @@
-package fi.hsl.transitdata.steps
+package fi.hsl.transitdata.steps.tripupdate
 
 import org.apache.pulsar.client.admin.PulsarAdmin
 import org.junit.jupiter.api.Assertions.assertTrue

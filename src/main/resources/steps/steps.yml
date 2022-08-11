@@ -9,16 +9,16 @@ steps:
     class: fi.hsl.transitdata.steps.StopMqttListener
     timeout: 10 #Seconds
   - id: send-eke-mqtt
-    class: fi.hsl.transitdata.steps.SendEkeMqtt
+    class: fi.hsl.transitdata.steps.eke.SendEkeMqtt
     timeout: 20
   - id: check-eke-file
-    class: fi.hsl.transitdata.steps.CheckEkeFile
+    class: fi.hsl.transitdata.steps.eke.CheckEkeFile
     timeout: 30
   - id: add-doi-data-to-redis
-    class: fi.hsl.transitdata.steps.AddDoiDataToRedis
+    class: fi.hsl.transitdata.steps.tripupdate.AddDoiDataToRedis
     timeout: 20
   - id: add-roi-data-to-db
-    class: fi.hsl.transitdata.steps.AddRoiDataToDb
+    class: fi.hsl.transitdata.steps.tripupdate.AddRoiDataToDb
     timeout: 35
   - id: start-tu-mqtt-listener
     class: fi.hsl.transitdata.steps.StartMqttListener
@@ -32,5 +32,5 @@ steps:
     class: fi.hsl.transitdata.steps.StopMqttListener
     timeout: 10 #Seconds
   - id: check-pulsar-stats
-    class: fi.hsl.transitdata.steps.CheckPulsarStats
+    class: fi.hsl.transitdata.steps.tripupdate.CheckPulsarStats
     timeout: 30

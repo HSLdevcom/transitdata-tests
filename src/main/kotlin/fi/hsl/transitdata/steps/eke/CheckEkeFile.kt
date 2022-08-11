@@ -1,4 +1,4 @@
-package fi.hsl.transitdata.steps
+package fi.hsl.transitdata.steps.eke
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue

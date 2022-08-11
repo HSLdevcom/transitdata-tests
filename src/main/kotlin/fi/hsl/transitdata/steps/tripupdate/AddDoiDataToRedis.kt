@@ -1,4 +1,4 @@
-package fi.hsl.transitdata.steps
+package fi.hsl.transitdata.steps.tripupdate
 
 import org.testcontainers.containers.GenericContainer
 import redis.clients.jedis.Jedis
