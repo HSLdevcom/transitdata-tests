@@ -5,3 +5,6 @@ steps:
   - id: send-metro-mqtt
     class: fi.hsl.transitdata.steps.metro.SendMetroMqtt
     timeout: 15
+  - id: start-metro-mqtt-listener
+    class: fi.hsl.transitdata.steps.metro.StartMetroMqttListener
+    timeout: 15

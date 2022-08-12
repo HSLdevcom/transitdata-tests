@@ -53,7 +53,7 @@ test-suites:
       - metro_tripupdate_processor
       - tripupdate_pulsar_mqtt_gateway
     steps:
-      - start-tu-mqtt-listener
+      - start-metro-mqtt-listener
       - add-metro-data-to-redis
       - send-metro-mqtt
       - check-tu-mqtt-messages
