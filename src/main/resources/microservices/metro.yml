@@ -1,0 +1,55 @@
+services:
+  - id: metro_mqtt_pulsar_gateway
+    container: hsldevcom/mqtt-pulsar-gateway:1
+    dependencies:
+      - pulsar
+      - mosquitto
+    waitStrategy:
+      type: LOG
+      logMessage: ".*Connections established, let's process some messages.*"
+    environment:
+      PULSAR_CONSUMER_SUBSCRIPTION_TYPE: Exclusive
+      MQTT_MAX_INFLIGHT: 300000
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      MQTT_BROKER_HOST: tcp://mosquitto:1883
+      MQTT_TOPIC: metro-schedule
+      PULSAR_PRODUCER_TOPIC: metro-estimate-raw
+      MQTT_CLIENT_ID: transitdata_test
+      MQTT_ADD_RANDOM_TO_CLIENT_ID: true
+  - id: metro_ats_parser
+    container: hsldevcom/transitdata-metro-ats-parser:develop
+    dependencies:
+      - pulsar
+      - redis
+    environment:
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      PULSAR_CONSUMER_TOPIC: metro-estimate-raw
+      PULSAR_PRODUCER_TOPIC: metro-estimate
+      REDIS_HOST: redis
+      METRO_ATS_TIMEZONE: UTC
+  - id: metro_stop_estimates
+    container: hsldevcom/transitdata-stop-estimates:1
+    dependencies:
+      - pulsar
+    environment:
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      PULSAR_CONSUMER_TOPIC: metro-estimate
+      PULSAR_PRODUCER_TOPIC: metro-stop-estimate
+      SOURCE: metro-estimate
+  - id: metro_tripupdate_processor
+    container: hsldevcom/transitdata-tripupdate-processor:1
+    dependencies:
+      - pulsar
+      - metro_stop_estimates
+    waitStrategy:
+      type: LOG
+      logMessage: ".*Start handling the messages.*"
+    environment:
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      PULSAR_CONSUMER_MULTIPLE_TOPICS_PATTERN: persistent://public/default/metro-stop-estimate
+      PULSAR_PRODUCER_TOPIC: gtfsrt_tripupdate
+      TRIPUPDATE_MIN_TIME_BEFORE_DEPARTURE_IN_SECS: "1 minute"

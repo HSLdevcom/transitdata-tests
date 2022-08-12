@@ -1,0 +1,7 @@
+steps:
+  - id: add-metro-data-to-redis
+    class: fi.hsl.transitdata.steps.metro.AddMetroDataToRedis
+    timeout: 20
+  - id: send-metro-mqtt
+    class: fi.hsl.transitdata.steps.metro.SendMetroMqtt
+    timeout: 15

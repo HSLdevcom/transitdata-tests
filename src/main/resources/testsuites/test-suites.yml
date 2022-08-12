@@ -41,3 +41,20 @@ test-suites:
       - check-pulsar-stats
       - check-tu-mqtt-messages
       - stop-tu-mqtt-listener
+  - id: metro
+    name: Test metro trip update pipeline
+    dependencies:
+      - pulsar
+      - mosquitto
+      - redis
+      - metro_mqtt_pulsar_gateway
+      - metro_ats_parser
+      - metro_stop_estimates
+      - metro_tripupdate_processor
+      - tripupdate_pulsar_mqtt_gateway
+    steps:
+      - start-tu-mqtt-listener
+      - add-metro-data-to-redis
+      - send-metro-mqtt
+      - check-tu-mqtt-messages
+      - stop-tu-mqtt-listener
