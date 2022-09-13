@@ -1,10 +1,7 @@
 package fi.hsl.transitdata.steps
 
 import mu.KotlinLogging
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
-import org.eclipse.paho.client.mqttv3.MqttAsyncClient
-import org.eclipse.paho.client.mqttv3.MqttCallbackExtended
-import org.eclipse.paho.client.mqttv3.MqttMessage
+import org.eclipse.paho.client.mqttv3.*
 import org.testcontainers.containers.GenericContainer
 import xyz.malkki.microservicetest.testexecution.TestStepCode
 import java.util.*
@@ -48,7 +45,12 @@ class StartMqttListener : TestStepCode {
             }
         })
         try {
-            mqttClient.connect().waitForCompletion()
+            val mqttConnectOptions = MqttConnectOptions().apply {
+                isCleanSession = true
+                keepAliveInterval = 15
+                connectionTimeout = 30
+            }
+            mqttClient.connect(mqttConnectOptions).waitForCompletion()
         } catch (e: Exception) {
             e.printStackTrace()
             log.info { "MQTT connection failed" }
