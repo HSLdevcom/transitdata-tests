@@ -2,7 +2,6 @@ package fi.hsl.transitdata.steps.eke
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-
 import org.testcontainers.containers.GenericContainer
 import xyz.malkki.microservicetest.testexecution.TestStepCode
 import java.nio.charset.StandardCharsets
@@ -23,7 +22,7 @@ class CheckEkeFile : TestStepCode {
 
         assertTrue(Files.list(dir).toList().isNotEmpty())
 
-        val csvFile = Files.list(dir).findAny().get()
+        val csvFile = Files.list(dir).max(Comparator.comparing { Files.getLastModifiedTime(it) }).get()
         val fileLines = GZIPInputStream(Files.newInputStream(csvFile)).bufferedReader(StandardCharsets.UTF_8).use { it.readLines() }
 
         assertEquals(2, fileLines.size)
