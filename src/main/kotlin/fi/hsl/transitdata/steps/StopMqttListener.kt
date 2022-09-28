@@ -10,7 +10,7 @@ class StopMqttListener : TestStepCode {
         updateState: (key: String, updater: (Any?) -> Any) -> Unit,
         getState: (key: String) -> Any?
     ) {
-        val mqttClient = (getState("mqtt-client") as MqttAsyncClient)
+        val mqttClient = (getState(StartMqttListener.MQTT_CLIENT_STATE_KEY) as MqttAsyncClient)
         mqttClient.disconnectForcibly(1000, 1000)
         mqttClient.close(true)
     }

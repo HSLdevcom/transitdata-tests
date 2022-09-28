@@ -6,5 +6,8 @@ steps:
     class: fi.hsl.transitdata.steps.metro.SendMetroMqtt
     timeout: 15
   - id: start-metro-mqtt-listener
-    class: fi.hsl.transitdata.steps.metro.StartMetroMqttListener
+    class: fi.hsl.transitdata.steps.StartMqttListener
     timeout: 15
+    parameters:
+      mqtt-broker-container: mosquitto
+      mqtt-topic: gtfsrt/#

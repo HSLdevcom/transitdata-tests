@@ -3,26 +3,33 @@ package fi.hsl.transitdata.steps
 import mu.KotlinLogging
 import org.eclipse.paho.client.mqttv3.*
 import org.testcontainers.containers.GenericContainer
-import xyz.malkki.microservicetest.testexecution.TestStepCode
+import xyz.malkki.microservicetest.testexecution.ParametrizedTestStepCode
 import java.util.*
 
 private val log = KotlinLogging.logger {}
 
-class StartMqttListener : TestStepCode {
+class StartMqttListener : ParametrizedTestStepCode {
+    companion object {
+        const val MQTT_MESSAGES_STATE_KEY = "mqtt-messages"
+        const val MQTT_CLIENT_STATE_KEY = "mqtt-client"
+    }
+
     override fun execute(
         containers: Map<String, GenericContainer<*>>,
+        parameters: Map<String, String>,
         updateState: (key: String, updater: (Any?) -> Any) -> Unit,
         getState: (key: String) -> Any?
     ) {
         Thread.sleep(10 * 1000)
 
-        updateState("mqtt-messages") { Collections.synchronizedList(mutableListOf<Pair<String, MqttMessage>>()) }
+        updateState(MQTT_MESSAGES_STATE_KEY) { Collections.synchronizedList(mutableListOf<Pair<String, MqttMessage>>()) }
 
-        val mosquitto = containers["mosquitto"]!!
+        val containerName = parameters["mqtt-broker-container"]
+        val mqttBroker = containers[containerName]!!
 
-        val url = "tcp://${mosquitto.host}:${mosquitto.firstMappedPort}"
+        val url = "tcp://${mqttBroker.host}:${mqttBroker.firstMappedPort}"
 
-        val mqttClient = MqttAsyncClient(url, "mqtt-async-client")
+        val mqttClient = MqttAsyncClient(url, MqttAsyncClient.generateClientId())
         mqttClient.setCallback(object : MqttCallbackExtended {
             override fun connectionLost(cause: Throwable) {
                 log.warn { "Lost connection to MQTT broker: ${cause.message}" }
@@ -30,7 +37,7 @@ class StartMqttListener : TestStepCode {
             }
 
             override fun messageArrived(topic: String, message: MqttMessage) {
-                updateState("mqtt-messages") {
+                updateState(MQTT_MESSAGES_STATE_KEY) {
                     (it as MutableList<Pair<String, MqttMessage>>).add(topic to message)
                     return@updateState it
                 }
@@ -40,8 +47,10 @@ class StartMqttListener : TestStepCode {
             }
 
             override fun connectComplete(reconnect: Boolean, serverURI: String?) {
-                log.info { "Connected to MQTT" }
-                mqttClient.subscribe("#", 0)
+                val topic = parameters["mqtt-topic"]
+
+                log.info { "Connected to MQTT, subscribing topic: $topic" }
+                mqttClient.subscribe(topic, 0)
             }
         })
         try {
@@ -56,6 +65,6 @@ class StartMqttListener : TestStepCode {
             log.info { "MQTT connection failed" }
         }
 
-        updateState("mqtt-client") { mqttClient }
+        updateState(MQTT_CLIENT_STATE_KEY) { mqttClient }
     }
 }

@@ -16,7 +16,7 @@ class CheckMqttMessages : TestStepCode {
     ) {
         Thread.sleep(10000)
 
-        val mqttMessages = (getState("mqtt-messages")?.let { it as List<Pair<String, MqttMessage>> }?.toList() ?: emptyList<List<Pair<String, MqttMessage>>>())
+        val mqttMessages = (getState(StartMqttListener.MQTT_MESSAGES_STATE_KEY)?.let { it as List<Pair<String, MqttMessage>> }?.toList() ?: emptyList<List<Pair<String, MqttMessage>>>())
 
         log.info { "MQTT messages: ${mqttMessages.size}" }
 

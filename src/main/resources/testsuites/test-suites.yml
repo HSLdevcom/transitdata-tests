@@ -35,12 +35,12 @@ test-suites:
       - tripupdate_processor
       - tripupdate_pulsar_mqtt_gateway
     steps:
-      - start-tu-mqtt-listener
+      - start-mqtt-listener
       - add-doi-data-to-redis
       - add-roi-data-to-db
       - check-pulsar-stats
-      - check-tu-mqtt-messages
-      - stop-tu-mqtt-listener
+      - check-mqtt-messages
+      - stop-mqtt-listener
   - id: metro
     name: Test metro trip update pipeline
     dependencies:
@@ -56,5 +56,5 @@ test-suites:
       - start-metro-mqtt-listener
       - add-metro-data-to-redis
       - send-metro-mqtt
-      - check-tu-mqtt-messages
-      - stop-tu-mqtt-listener
+      - check-mqtt-messages
+      - stop-mqtt-listener
