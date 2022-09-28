@@ -22,15 +22,13 @@ steps:
     timeout: 35
   - id: start-tu-mqtt-listener
     class: fi.hsl.transitdata.steps.StartMqttListener
-    timeout: 15 #Seconds
-    dependencies:
-      - mosquitto
+    timeout: 15
   - id: check-tu-mqtt-messages
     class: fi.hsl.transitdata.steps.CheckMqttMessages
     timeout: 15
   - id: stop-tu-mqtt-listener
     class: fi.hsl.transitdata.steps.StopMqttListener
-    timeout: 10 #Seconds
+    timeout: 10
   - id: check-pulsar-stats
     class: fi.hsl.transitdata.steps.tripupdate.CheckPulsarStats
     timeout: 30
