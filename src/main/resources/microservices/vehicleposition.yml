@@ -32,7 +32,7 @@ services:
       PULSAR_CONSUMER_MULTIPLE_TOPICS_PATTERN: persistent://public/default/hfp
       PULSAR_PRODUCER_TOPIC: gtfsrt_vehicleposition
   - id: vehicleposition_pulsar_mqtt_gateway
-    container: hsldevcom/pulsar-mqtt-gateway:develop
+    container: hsldevcom/pulsar-mqtt-gateway:1
     dependencies:
       - mosquitto
       - pulsar

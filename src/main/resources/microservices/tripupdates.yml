@@ -1,6 +1,6 @@
 services:
   - id: pubtrans_arrival_source
-    container: hsldevcom/transitdata-pubtrans-source:develop
+    container: hsldevcom/transitdata-pubtrans-source:1
     dependencies:
       - postgres
       - pulsar
@@ -19,7 +19,7 @@ services:
         hostPath: test_db_conn_string.txt
         containerPath: /connection_string.txt
   - id: pubtrans_departure_source
-    container: hsldevcom/transitdata-pubtrans-source:develop
+    container: hsldevcom/transitdata-pubtrans-source:1
     dependencies:
       - postgres
       - pulsar
@@ -67,7 +67,7 @@ services:
       PULSAR_PRODUCER_TOPIC: gtfsrt_tripupdate
       TRIPUPDATE_MIN_TIME_BEFORE_DEPARTURE_IN_SECS: "1 minute"
   - id: tripupdate_pulsar_mqtt_gateway
-    container: hsldevcom/pulsar-mqtt-gateway:develop
+    container: hsldevcom/pulsar-mqtt-gateway:1
     dependencies:
       - mosquitto
       - pulsar

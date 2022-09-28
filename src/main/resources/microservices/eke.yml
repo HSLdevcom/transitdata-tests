@@ -18,7 +18,7 @@ services:
       MQTT_CLIENT_ID: transitdata_test
       MQTT_ADD_RANDOM_TO_CLIENT_ID: true
   - id: eke_sink
-    container: hsldevcom/transitdata-eke-sink:develop
+    container: hsldevcom/transitdata-eke-sink:1
     dependencies:
       - pulsar
     volumes:
