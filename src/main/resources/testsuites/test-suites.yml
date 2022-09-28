@@ -56,5 +56,5 @@ test-suites:
       - start-metro-mqtt-listener
       - add-metro-data-to-redis
       - send-metro-mqtt
-      - check-mqtt-messages
+      - check-metro-mqtt-message
       - stop-mqtt-listener

@@ -11,3 +11,6 @@ steps:
     parameters:
       mqtt-broker-container: mosquitto
       mqtt-topic: gtfsrt/#
+  - id: check-metro-mqtt-message
+    class: fi.hsl.transitdata.steps.metro.CheckMetroMqttMessage
+    timeout: 10
