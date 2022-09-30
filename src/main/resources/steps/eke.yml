@@ -1,0 +1,7 @@
+steps:
+  - id: send-eke-mqtt
+    class: fi.hsl.transitdata.steps.eke.SendEkeMqtt
+    timeout: 20
+  - id: check-eke-file
+    class: fi.hsl.transitdata.steps.eke.CheckEkeFile
+    timeout: 30

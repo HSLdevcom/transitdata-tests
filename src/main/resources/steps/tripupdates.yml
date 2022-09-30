@@ -1,0 +1,10 @@
+steps:
+  - id: add-doi-data-to-redis
+    class: fi.hsl.transitdata.steps.tripupdate.AddDoiDataToRedis
+    timeout: 20
+  - id: add-roi-data-to-db
+    class: fi.hsl.transitdata.steps.tripupdate.AddRoiDataToDb
+    timeout: 35
+  - id: check-pulsar-stats
+    class: fi.hsl.transitdata.steps.tripupdate.CheckPulsarStats
+    timeout: 30
