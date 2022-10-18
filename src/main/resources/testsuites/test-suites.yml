@@ -58,3 +58,20 @@ test-suites:
       - send-metro-mqtt
       - check-metro-mqtt-message
       - stop-mqtt-listener
+  - id: apc
+    name: Test passenger count pipeline (HFP + APC -> GTFS-RT)
+    dependencies:
+      - mosquitto
+      - pulsar
+      - apc_hfp_mqtt_pulsar_gateway
+      - hfp_parser
+      - apc_mosquitto
+      - apc_mqtt_pulsar_gateway
+      - apc_parser
+      - vehicleposition_processor
+      - vehicleposition_pulsar_mqtt_gateway
+    steps:
+      - start-apc-mqtt-listener
+      - send-apc-mqtt
+      - check-mqtt-messages
+      - stop-mqtt-listener
