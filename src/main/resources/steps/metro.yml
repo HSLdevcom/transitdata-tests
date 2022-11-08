@@ -1,10 +1,19 @@
 steps:
+  - id: set-start-time
+    class: fi.hsl.transitdata.steps.metro.SetStartTime
+    parameters:
+      start-time: "now"
   - id: add-metro-data-to-redis
     class: fi.hsl.transitdata.steps.metro.AddMetroDataToRedis
     timeout: 20
+    parameters:
+      start-stop-number: "2314601"
   - id: send-metro-mqtt
     class: fi.hsl.transitdata.steps.metro.SendMetroMqtt
     timeout: 15
+    parameters:
+      stations: FIN, MAK, NIK, URP, TAP, OTA, KEN, KOS, LAS, RL, KP, RT, HY, HT, SN, KA, KS, HN, ST, IK, PT, RS, VS
+      first-station: MAK
   - id: start-metro-mqtt-listener
     class: fi.hsl.transitdata.steps.StartMqttListener
     timeout: 15
@@ -14,3 +23,22 @@ steps:
   - id: check-metro-mqtt-message
     class: fi.hsl.transitdata.steps.metro.CheckMetroMqttMessage
     timeout: 10
+  # Länsimetro 2 test steps
+  - id: set-start-time-lansimetro
+    class: fi.hsl.transitdata.steps.metro.SetStartTime
+    parameters:
+      start-time: "2022-12-03T09:00:00"
+  - id: send-metro-mqtt-lansimetro
+    class: fi.hsl.transitdata.steps.metro.SendMetroMqtt
+    timeout: 15
+    parameters:
+      stations: KIL, ESL, SOU, KAI, FIN, MAK, NIK, URP, TAP, OTA, KEN, KOS, LAS, RL, KP, RT, HY, HT, SN, KA, KS, HN, ST, IK, PT, RS, VS
+      first-station: KIL
+  - id: add-metro-data-to-redis-lansimetro
+    class: fi.hsl.transitdata.steps.metro.AddMetroDataToRedis
+    timeout: 20
+    parameters:
+      start-stop-number: "2413601"
+  - id: check-metro-pulsar-stats
+    class: fi.hsl.transitdata.steps.metro.CheckMetroPulsarStats
+    timeout: 15
