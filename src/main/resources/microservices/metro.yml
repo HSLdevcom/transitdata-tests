@@ -29,6 +29,10 @@ services:
       PULSAR_PRODUCER_TOPIC: metro-estimate
       REDIS_HOST: redis
       METRO_ATS_TIMEZONE: UTC
+      ADDED_TRIPS_ENABLED: false
+    waitStrategy:
+      type: LOG
+      logMessage: ".*Start handling the messages.*"
   - id: metro_stop_estimates
     container: hsldevcom/transitdata-stop-estimates:1
     dependencies:
