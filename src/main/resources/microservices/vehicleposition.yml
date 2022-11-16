@@ -29,7 +29,7 @@ services:
     environment:
       PULSAR_HOST: pulsar
       PULSAR_PORT: 6650
-      PULSAR_CONSUMER_MULTIPLE_TOPICS_PATTERN: persistent://public/default/hfp
+      PULSAR_CONSUMER_MULTIPLE_TOPICS_PATTERN: "persistent://public/default/(hfp|apc)"
       PULSAR_PRODUCER_TOPIC: gtfsrt_vehicleposition
   - id: vehicleposition_pulsar_mqtt_gateway
     container: hsldevcom/pulsar-mqtt-gateway:1

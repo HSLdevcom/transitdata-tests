@@ -1,0 +1,49 @@
+services:
+  # we need to use different MQTT broker for APC data, because mqtt-pulsar-gateway subscribes topic /hfp/v2/#
+  - id: apc_mosquitto
+    container: eclipse-mosquitto:1.6.3
+    ports:
+      - 1883
+    waitStrategy:
+      type: LOG
+      logMessage: ".*Opening ipv4 listen socket on port 1883.*"
+  - id: apc_mqtt_pulsar_gateway
+    container: hsldevcom/mqtt-pulsar-gateway:1
+    dependencies:
+      - pulsar
+      - apc_mosquitto
+    environment:
+      PULSAR_CONSUMER_SUBSCRIPTION_TYPE: Exclusive
+      MQTT_MAX_INFLIGHT: 300000
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      MQTT_BROKER_HOST: tcp://apc_mosquitto:1883
+      MQTT_TOPIC: /hfp/v2/journey/#
+      PULSAR_PRODUCER_TOPIC: apc-mqtt-raw
+      MQTT_CLIENT_ID: transitdata_test
+      MQTT_ADD_RANDOM_TO_CLIENT_ID: true
+  - id: apc_parser
+    container: hsldevcom/transitdata-hfp-parser:1
+    dependencies:
+      - pulsar
+    environment:
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      PULSAR_CONSUMER_TOPIC: apc-mqtt-raw
+      PULSAR_PRODUCER_TOPIC: apc
+      MESSAGE_TYPE: apc
+  # we need to use different HFP subscriber so that we can subscribe mock data from mosquitto instead of real data from production MQTT broker
+  - id: apc_hfp_mqtt_pulsar_gateway
+    container: hsldevcom/mqtt-pulsar-gateway:1
+    dependencies:
+      - pulsar
+    environment:
+      PULSAR_CONSUMER_SUBSCRIPTION_TYPE: Exclusive
+      MQTT_MAX_INFLIGHT: 300000
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      MQTT_BROKER_HOST: tcp://mosquitto:1883
+      MQTT_TOPIC: /hfp/v2/journey/#
+      PULSAR_PRODUCER_TOPIC: hfp-mqtt-raw
+      MQTT_CLIENT_ID: transitdata_test
+      MQTT_ADD_RANDOM_TO_CLIENT_ID: true
