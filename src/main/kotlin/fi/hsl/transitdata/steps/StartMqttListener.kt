@@ -20,8 +20,6 @@ class StartMqttListener : ParametrizedTestStepCode {
         updateState: (key: String, updater: (Any?) -> Any) -> Unit,
         getState: (key: String) -> Any?
     ) {
-        Thread.sleep(10 * 1000)
-
         updateState(MQTT_MESSAGES_STATE_KEY) { Collections.synchronizedList(mutableListOf<Pair<String, MqttMessage>>()) }
 
         val containerName = parameters["mqtt-broker-container"]
