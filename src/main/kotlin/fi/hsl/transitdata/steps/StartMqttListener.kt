@@ -12,6 +12,14 @@ class StartMqttListener : ParametrizedTestStepCode {
     companion object {
         const val MQTT_MESSAGES_STATE_KEY = "mqtt-messages"
         const val MQTT_CLIENT_STATE_KEY = "mqtt-client"
+
+        fun getListenerSpecificKey(key: String, listenerName: String?): String {
+            if (listenerName.isNullOrBlank()) {
+                return key
+            } else {
+                return "${key}_$listenerName"
+            }
+        }
     }
 
     override fun execute(
@@ -20,7 +28,9 @@ class StartMqttListener : ParametrizedTestStepCode {
         updateState: (key: String, updater: (Any?) -> Any) -> Unit,
         getState: (key: String) -> Any?
     ) {
-        updateState(MQTT_MESSAGES_STATE_KEY) { Collections.synchronizedList(mutableListOf<Pair<String, MqttMessage>>()) }
+        val listenerName = parameters["name"]
+
+        updateState(getListenerSpecificKey(MQTT_MESSAGES_STATE_KEY, listenerName)) { Collections.synchronizedList(mutableListOf<Pair<String, MqttMessage>>()) }
 
         val containerName = parameters["mqtt-broker-container"]
         val mqttBroker = containers[containerName]!!
@@ -35,7 +45,7 @@ class StartMqttListener : ParametrizedTestStepCode {
             }
 
             override fun messageArrived(topic: String, message: MqttMessage) {
-                updateState(MQTT_MESSAGES_STATE_KEY) {
+                updateState(getListenerSpecificKey(MQTT_MESSAGES_STATE_KEY, listenerName)) {
                     (it as MutableList<Pair<String, MqttMessage>>).add(topic to message)
                     return@updateState it
                 }
@@ -63,6 +73,6 @@ class StartMqttListener : ParametrizedTestStepCode {
             log.info { "MQTT connection failed" }
         }
 
-        updateState(MQTT_CLIENT_STATE_KEY) { mqttClient }
+        updateState(getListenerSpecificKey(MQTT_CLIENT_STATE_KEY, listenerName)) { mqttClient }
     }
 }
