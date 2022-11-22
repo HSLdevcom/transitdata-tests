@@ -15,8 +15,6 @@ class CheckMqttMessages : ParametrizedTestStepCode {
         updateState: (key: String, updater: (Any?) -> Any) -> Unit,
         getState: (key: String) -> Any?
     ) {
-        Thread.sleep(10000)
-
         val listenerName = parameters["name"]
 
         val mqttMessages = (getState(StartMqttListener.getListenerSpecificKey(StartMqttListener.MQTT_MESSAGES_STATE_KEY, listenerName))?.let { it as List<Pair<String, MqttMessage>> }?.toList() ?: emptyList<List<Pair<String, MqttMessage>>>())
