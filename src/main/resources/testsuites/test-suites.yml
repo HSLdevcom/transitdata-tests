@@ -10,6 +10,7 @@ test-suites:
       - vehicleposition_pulsar_mqtt_gateway
     steps:
       - start-mqtt-listener
+      - wait-5s
       - check-mqtt-messages
       - stop-mqtt-listener
   - id: eke_sink
@@ -73,7 +74,10 @@ test-suites:
       - vehicleposition_pulsar_mqtt_gateway
     steps:
       - start-apc-mqtt-listener
+      - wait-5s
+      - wait-5s
       - send-apc-mqtt
+      - wait-5s
       - check-mqtt-messages
       - stop-mqtt-listener
   - id: metro_lansimetro2
