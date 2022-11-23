@@ -11,6 +11,9 @@ steps:
   - id: stop-mqtt-listener
     class: fi.hsl.transitdata.steps.StopMqttListener
     timeout: 10
+  - id: print-pulsar-stats
+    class: fi.hsl.transitdata.steps.PrintPulsarStats
+    timeout: 30
   - id: wait-5s
     class: xyz.malkki.microservicetest.teststeps.WaitTestStep
     parameters:
