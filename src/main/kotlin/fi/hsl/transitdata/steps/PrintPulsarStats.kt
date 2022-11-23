@@ -7,6 +7,9 @@ import xyz.malkki.microservicetest.testexecution.TestStepCode
 
 private val log = KotlinLogging.logger {}
 
+/**
+ * Test step that prints stats for all Pulsar topics. Can be used for debugging failing tests
+ */
 class PrintPulsarStats : TestStepCode {
     override fun execute(
         containers: Map<String, GenericContainer<*>>,
