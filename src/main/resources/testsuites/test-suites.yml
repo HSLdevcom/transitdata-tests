@@ -96,6 +96,27 @@ test-suites:
       - wait-for-combining
       - check-mqtt-messages
       - stop-mqtt-listener
+  - id: partial-apc-sum-two
+    name: Partial APC pipeline sums two APC messages
+    dependencies:
+      - mosquitto  # For HFP messages
+      - apc_mosquitto  # For partial-APC and expanded-APC messages
+      - pulsar
+      - apc_hfp_mqtt_pulsar_gateway
+      - hfp_parser
+      - partial_apc_mqtt_pulsar_gateway
+      - partial_apc_mqtt_deduplicator
+      - partial_apc_expander_combiner
+      - partial_apc_pbf_json_transformer
+      - partial_apc_pulsar_mqtt_gateway
+    steps:
+      - start-expanded-apc-listener
+      - send-partial-apc-data
+      - send-more-partial-apc-data
+      - send-hfp-departure
+      - wait-for-combining
+      - check-expanded-apc-message
+      - stop-mqtt-listener
   - id: metro_lansimetro2
     name: Test metro pipeline with Länsimetro 2 data
     dependencies:
