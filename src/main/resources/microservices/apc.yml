@@ -37,6 +37,7 @@ services:
     container: hsldevcom/mqtt-pulsar-gateway:1
     dependencies:
       - pulsar
+      - mosquitto
     environment:
       PULSAR_CONSUMER_SUBSCRIPTION_TYPE: Exclusive
       MQTT_MAX_INFLIGHT: 300000

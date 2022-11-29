@@ -1,0 +1,68 @@
+services:
+  - id: partial_apc_mqtt_pulsar_gateway
+    container: hsldevcom/mqtt-pulsar-gateway:develop
+    dependencies:
+      - pulsar
+      - apc_mosquitto
+    environment:
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      MQTT_BROKER_HOST: tcp://apc_mosquitto:1883
+      MQTT_TOPIC: /hfp/v2/journey/ongoing/partial-apc/#
+      MQTT_CLIENT_ID: partial_apc_mqtt_pulsar_gateway
+      PULSAR_PRODUCER_TOPIC: partial-apc
+      MQTT_ADD_RANDOM_TO_CLIENT_ID: true
+  - id: partial_apc_mqtt_deduplicator
+    container: hsldevcom/transitdata-hfp-deduplicator:develop
+    dependencies:
+      - pulsar
+    environment:
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      PULSAR_CONSUMER_TOPIC: partial-apc
+      PULSAR_CONSUMER_SUBSCRIPTION: partial_apc_mqtt_deduplicator
+      PULSAR_PRODUCER_TOPIC: partial-apc-deduplicated
+  - id: partial_apc_expander_combiner
+    container: hsldevcom/transitdata-partial-apc-expander-combiner:edge
+    dependencies:
+      - pulsar
+    environment:
+      APC_WAIT_IN_SECONDS: 6
+      VEHICLE_CAPACITIES: '[["0018/00710",67],["0018/00817",67],["0018/00823",67],["0018/00837",67],["0018/00872",67],["0018/00243",67],["0018/00244",67],["0018/00245",67],["0018/00246",67],["0018/00247",67],["0018/00225",56],["0018/00226",56],["0018/00227",56],["0018/00228",56],["0018/00229",56],["0018/00230",56],["0018/00231",56],["0022/01005",67],["0022/01006",67],["0022/01007",67],["0022/01008",67],["0022/01039",67],["0022/01169",56],["0022/01170",56],["0022/01171",56],["0022/01172",56],["0022/01173",56],["0022/00928",67],["0022/00931",67],["0022/00932",67],["0022/00935",67],["0022/00936",67],["0022/00937",67],["0022/00959",67],["0022/00964",67],["0022/00965",67],["0022/00966",67],["0022/00973",67],["0022/00974",67],["0022/00976",67],["0022/00977",67],["0022/00978",67],["0022/00979",67],["0022/00958",67],["0022/00967",67],["0022/00968",67],["0022/00969",67],["0022/00970",67],["0022/00971",67],["0022/00985",67],["0022/01004",67],["0022/01052",67],["0022/01053",67],["0022/01054",67],["0022/01055",67],["0022/01093",56],["0022/01094",56],["0017/00027",56],["0017/00028",56],["0017/00029",56],["0017/00030",56],["0017/00031",56],["0017/00032",56],["0020/00003",67],["0020/00024",67],["0020/00026",67]]'
+      DEFAULT_VEHICLE_CAPACITY: 78
+      HEALTH_CHECK_PORT: 8080
+      PULSAR_BLOCK_IF_QUEUE_FULL: true
+      PULSAR_COMPRESSION_TYPE: LZ4
+      PULSAR_HFP_CONSUMER_TOPIC: hfp
+      PULSAR_HFP_SUBSCRIPTION: partial_apc_expander_combiner_hfp
+      PULSAR_PARTIAL_APC_CONSUMER_TOPIC: partial-apc-deduplicated
+      PULSAR_PARTIAL_APC_SUBSCRIPTION: partial_apc_expander_combiner_partial_apc
+      PULSAR_PRODUCER_TOPIC: expanded-apc
+      PULSAR_SERVICE_URL: pulsar://pulsar:6650
+  - id: partial_apc_pbf_json_transformer
+    container: hsldevcom/transitdata-apc-protobuf-json-transformer:edge
+    dependencies:
+      - pulsar
+    environment:
+      HEALTH_CHECK_PORT: 8080
+      PULSAR_BLOCK_IF_QUEUE_FULL: true
+      PULSAR_COMPRESSION_TYPE: LZ4
+      PULSAR_CONSUMER_TOPIC: expanded-apc
+      PULSAR_SUBSCRIPTION: partial_apc_protobuf_json_transformer
+      PULSAR_PRODUCER_TOPIC: expanded-apc-mqtt-backfeed
+      PULSAR_SERVICE_URL: pulsar://pulsar:6650
+  - id: partial_apc_pulsar_mqtt_gateway
+    container: hsldevcom/pulsar-mqtt-gateway:develop
+    dependencies:
+      - pulsar
+      - apc_mosquitto
+    environment:
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      MQTT_BROKER_HOST: tcp://apc_mosquitto:1883
+      MQTT_TOPIC: /hfp/v2/journey/ongoing/apc/bus # use topicSuffix, e.g. "0123/12345"
+      PULSAR_CONSUMER_TOPIC: expanded-apc-mqtt-backfeed
+      MQTT_RETAIN_MESSAGE: false
+      PULSAR_CONSUMER_SUBSCRIPTION: partial_apc_pulsar_mqtt_gateway
+      MQTT_CLIENT_ID: partial_apc_pulsar_mqtt_gateway
+      MQTT_HAS_AUTHENTICATION: false
