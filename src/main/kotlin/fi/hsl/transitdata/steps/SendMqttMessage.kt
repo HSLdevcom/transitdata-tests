@@ -1,8 +1,11 @@
 package fi.hsl.transitdata.steps
 
+import mu.KotlinLogging
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.testcontainers.containers.GenericContainer
 import xyz.malkki.microservicetest.testexecution.ParametrizedTestStepCode
+
+private val log = KotlinLogging.logger {}
 
 class SendMqttMessage : ParametrizedTestStepCode {
     private fun sendMqttMessage(host: String, topic: String, payload: ByteArray) {
@@ -14,7 +17,13 @@ class SendMqttMessage : ParametrizedTestStepCode {
     }
 
     private fun readPayloadFromResource(resourceName: String): ByteArray {
-        return SendMqttMessage::class.java.classLoader.getResourceAsStream(resourceName).readBytes()
+        val inputStream = SendMqttMessage::class.java.classLoader.getResourceAsStream(resourceName)
+
+        if (inputStream == null) {
+            log.warn { "No resource found: $resourceName" }
+        }
+
+        return inputStream.use { it.readBytes() }
     }
 
     override fun execute(
