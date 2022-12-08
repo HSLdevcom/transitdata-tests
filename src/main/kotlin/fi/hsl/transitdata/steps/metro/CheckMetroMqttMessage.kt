@@ -38,6 +38,6 @@ class CheckMetroMqttMessage : TestStepCode {
 
         val firstStopId = stopTimeUpdates.first().stopId
 
-        assertEquals("2314601", firstStopId)
+        assertEquals("2413601", firstStopId)
     }
 }

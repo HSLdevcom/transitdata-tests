@@ -7,13 +7,13 @@ steps:
     class: fi.hsl.transitdata.steps.metro.AddMetroDataToRedis
     timeout: 20
     parameters:
-      start-stop-number: "2314601"
+      start-stop-number: "2413601"
   - id: send-metro-mqtt
     class: fi.hsl.transitdata.steps.metro.SendMetroMqtt
     timeout: 15
     parameters:
-      stations: FIN, MAK, NIK, URP, TAP, OTA, KEN, KOS, LAS, RL, KP, RT, HY, HT, SN, KA, KS, HN, ST, IK, PT, RS, VS
-      first-station: MAK
+      stations: KIL, ESL, SOU, KAI, FIN, MAK, NIK, URP, TAP, OTA, KEN, KOS, LAS, RL, KP, RT, HY, HT, SN, KA, KS, HN, ST, IK, PT, RS, VS
+      first-station: KIL
   - id: start-metro-mqtt-listener
     class: fi.hsl.transitdata.steps.StartMqttListener
     timeout: 15
