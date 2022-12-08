@@ -1,7 +1,11 @@
 steps:
   - id: send-eke-mqtt
-    class: fi.hsl.transitdata.steps.eke.SendEkeMqtt
-    timeout: 20
+    class: fi.hsl.transitdata.steps.SendMqttMessage
+    timeout: 15
+    parameters:
+      mqtt-broker-container: mosquitto
+      topic: "eke/v1/sm5/15/A/stadlerUDP"
+      payload-resource: "stadlerUDP.dat"
   - id: check-eke-file
     class: fi.hsl.transitdata.steps.eke.CheckEkeFile
     timeout: 30
