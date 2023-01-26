@@ -18,3 +18,7 @@ steps:
     class: xyz.malkki.microservicetest.teststeps.WaitTestStep
     parameters:
       millis: "5000"
+  - id: wait-1min
+    class: xyz.malkki.microservicetest.teststeps.WaitTestStep
+    parameters:
+      millis: "60000"
