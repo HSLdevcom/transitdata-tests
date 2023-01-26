@@ -1,0 +1,7 @@
+steps:
+  - id: check-hfp-csv-logs
+    class: fi.hsl.transitdata.steps.CheckLogs
+    timeout: 15
+    parameters:
+      container: hfp_csv_sink
+      message: "Wrote \\d+ messages to CSV files in \\d+ ms"

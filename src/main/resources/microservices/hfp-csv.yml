@@ -1,0 +1,13 @@
+services:
+  - id: hfp_csv_sink
+    container: hsldevcom/transitlog-hfp-csv-sink:develop
+    dependencies:
+      - pulsar
+      - mosquitto
+    environment:
+      PULSAR_CONSUMER_SUBSCRIPTION_TYPE: Exclusive
+      MQTT_MAX_INFLIGHT: 300000
+      PULSAR_HOST: pulsar
+      PULSAR_PORT: 6650
+      PULSAR_CONSUMER_TOPIC: hfp
+      SINK_TYPE: test
